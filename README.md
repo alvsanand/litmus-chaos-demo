@@ -7,7 +7,7 @@ In the market, there are currently many tools that ease us the task of "experime
 * [Chaos Monkey](https://github.com/Netflix/chaosmonkey) - A resiliency tool that helps applications tolerate random instance failures.
 * [Gremlin Inc.](https://www.gremlin.com/) - Failure as a Service.
 * [Chaos Toolkit](https://github.com/chaostoolkit/chaostoolkit) - A chaos engineering toolkit to help you build confidence in your software system.
-* [Litmus Chanos](https://github.com/litmuschaos/litmus) - Framework for Kubernetes environments that enables users to run test suites, capture logs, generate reports and perform chaos tests.
+* [Litmus Chaos](https://github.com/litmuschaos/litmus) - Framework for Kubernetes environments that enables users to run test suites, capture logs, generate reports and perform chaos tests.
 * [Chaos Monkey for Spring Boot](https://codecentric.github.io/chaos-monkey-spring-boot/) - Injects latencies, exceptions, and terminations into Spring Boot applications
 
 More tools can be found [here](https://github.com/dastergon/awesome-chaos-engineering).
@@ -40,35 +40,31 @@ In case you need a Kubernetes cluster locally, I encourage to use [k3d](https://
 
 - [Install](https://k3d.io/v4.4.8/#quick-start) k3d.
 
-- Download [calico.yaml](https://k3d.io/usage/guides/calico.yaml) manifest file.
-
-- Create a k3d cluster with Calico.
+- Create a k3d cluster with 3 master and 3 workers.
 
         ```bash
-        k3d cluster create \
-            --k3s-server-arg '--flannel-backend=none' \
-            --volume $(pwd)"/calico.yaml:/var/lib/rancher/k3s/server/manifests/calico.yaml"
+        k3d cluster create --agents 2 --servers 3
         ```
 
 ### Install Litmus Operator
 
-- Create a namepsace for Litmus. 
+- Create a namepsace for Litmus.
 
-```bash
-kubectl create ns litmus
-```
+        ```bash
+        kubectl create ns litmus
+        ```
 
-- Install Litmus. 
+- Install Litmus.
 
-```bash
-kubectl apply -n litmus -f https://litmuschaos.github.io/litmus/2.0.0/litmus-2.0.0.yaml
-```
+        ```bash
+        kubectl apply -n litmus -f https://litmuschaos.github.io/litmus/2.0.0/litmus-2.0.0.yaml
+        ```
 
 - Verifiy Litmus is running.
 
-```bash
-kubectl get pods -n litmus
-```
+        ```bash
+        kubectl get pods -n litmus
+        ```
 
 - Open port to Litmus ChaosCenter.
 
@@ -80,9 +76,9 @@ kubectl port-forward svc/litmusportal-frontend-service -n litmus 30000:9091 --ad
 
     - If using WSL+Docker, run:
 
-        ```bash
-        wslview http://$(hostname -I):30000
-        ```
+            ```bash
+            wslview http://$(hostname -I):30000
+            ```
 
 - We should be able to see the Login Page of Litmus ChaosCenter. The default credentials are ```admin``` and ```litmus```.
 
@@ -156,7 +152,7 @@ Now, continue with the demo:
 
 ![Litmus ChaosCenter - Edit 2](img/litmus-workflow-sequence-edit4.png)
 
-- After configuring the workflow sequenve, if we click in "Edit YAML", we will get the corresponding YAML with the Litmus Kubernetes Custom Resources for this the experiment and even modify them. Just let as is and click *Save changes*.
+- After configuring the workflow sequence, if we click in "Edit YAML", we will get the corresponding YAML with the Litmus Kubernetes Custom Resources for this the experiment and even modify them. Just let as is and click *Save changes*.
 
 ![Litmus ChaosCenter - Sequence YAML](img/litmus-workflow-sequence-yaml.png)
 
@@ -184,27 +180,27 @@ Now, continue with the demo:
 
 - Let open the shell again and see what has happened.
 
-```
-kubectl get pods -n litmus | grep bank
-```
+        ```
+        kubectl get pods -n litmus | grep bank
+        ```
 
 - It must show that there a pod created by deployment/podtato-main has been deleted.
 
-```
-podtato-right-leg-68bb97548f-l6fz4          1/1     Running       0          4m57s
-podtato-hats-5f6c4d9ff-q5dn2                1/1     Running       0          4m59s
-podtato-right-arm-98bdff545-r9d9p           1/1     Running       0          4m56s
-podtato-left-leg-5544c7c88c-4g69t           1/1     Running       0          4m59s
-podtato-left-arm-647c44c49f-llm4s           1/1     Running       0          4m58s
-podtato-hats-new-787797c7fd-jhjsh           1/1     Running       0          4m47s
-podtato-main-7bcb959bd8-pmtx9               1/1     Running       0          4m59s
-podtato-head-1632560905-2464361453          0/2     Completed     0          5m7s
-podtato-head-1632560905-365914815           0/2     Completed     0          3m25s
-podtato-head-1632560905-2013300608          2/2     Running       0          114s
-podtato-main-pod-delete-chaos4pxcs-runner   1/1     Running       0          66s
-podtato-main-7bcb959bd8-5rlcc               0/1     Running       0          8s
-podtato-main-7bcb959bd8-zjdgc               0/1     Terminating   0          4m59s
-```
+        ```bash
+        podtato-right-leg-68bb97548f-l6fz4          1/1     Running       0          4m57s
+        podtato-hats-5f6c4d9ff-q5dn2                1/1     Running       0          4m59s
+        podtato-right-arm-98bdff545-r9d9p           1/1     Running       0          4m56s
+        podtato-left-leg-5544c7c88c-4g69t           1/1     Running       0          4m59s
+        podtato-left-arm-647c44c49f-llm4s           1/1     Running       0          4m58s
+        podtato-hats-new-787797c7fd-jhjsh           1/1     Running       0          4m47s
+        podtato-main-7bcb959bd8-pmtx9               1/1     Running       0          4m59s
+        podtato-head-1632560905-2464361453          0/2     Completed     0          5m7s
+        podtato-head-1632560905-365914815           0/2     Completed     0          3m25s
+        podtato-head-1632560905-2013300608          2/2     Running       0          114s
+        podtato-main-pod-delete-chaos4pxcs-runner   1/1     Running       0          66s
+        podtato-main-7bcb959bd8-5rlcc               0/1     Running       0          8s
+        podtato-main-7bcb959bd8-zjdgc               0/1     Terminating   0          4m59s
+        ```
 
 - Wait until the workflow is completed
 
@@ -232,72 +228,72 @@ In this scenario we will perform chaos into a simple application and make it mor
 
 ### Install the application
 
-- Create test namespace. 
+- Create test namespace.
 
-```bash
-kubectl create ns test
-```
+        ```bash
+        kubectl create ns test
+        ```
 
-- Create a deployment for a ngnix server with 1 replica. 
+- Create a deployment for a ngnix server with 1 replica.
 
-```bash
-kubectl create deployment -n test --image=nginx --port 80 nginx --replicas=1
-```
+        ```bash
+        kubectl create deployment -n test --image=nginx --port 80 nginx --replicas=1
+        ```
 
-- Expose the server creating a service. 
+- Expose the server creating a service.
 
-```bash
-kubectl expose deployment -n test nginx --port=80 --target-port=80 --cluster-ip=''
-```
+        ```bash
+        kubectl expose deployment -n test nginx --port=80 --target-port=80 --cluster-ip=''
+        ```
 
 - Verify the service nginx is running.
 
-```bash
-kubectl get deployment,pod,svc -n test
+        ```bash
+        kubectl get deployment,pod,svc -n test
 
----
-NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/nginx   1/1     1            1           104s
+        ---
+        NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+        deployment.apps/nginx   1/1     1            1           104s
 
-NAME                         READY   STATUS    RESTARTS   AGE
-pod/nginx-7848d4b86f-frd6p   1/1     Running   0          104s
+        NAME                         READY   STATUS    RESTARTS   AGE
+        pod/nginx-7848d4b86f-frd6p   1/1     Running   0          104s
 
-NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
-service/nginx   ClusterIP   10.43.116.253   <none>        80/TCP    72s
-```
+        NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+        service/nginx   ClusterIP   10.43.116.253   <none>        80/TCP    72s
+        ```
 
-```bash
-kubectl run -n test test-ngnix --image=busybox --rm --restart=Never -it -- sh -c "wget -O- http://nginx.test.svc.cluster.local:80 --timeout 3"
+        ```bash
+        kubectl run -n test test-ngnix --image=busybox --rm --restart=Never -it -- sh -c "wget -O- http://nginx.test.svc.cluster.local:80 --timeout 3"
 
----
-writing to stdout
-<!DOCTYPE html>
-<html>
-<head>
-<title>Welcome to nginx!</title>
-<style>
-html { color-scheme: light dark; }
-body { width: 35em; margin: 0 auto;
-font-family: Tahoma, Verdana, Arial, sans-serif; }
-</style>
-</head>
-<body>
-<h1>Welcome to nginx!</h1>
-<p>If you see this page, the nginx web server is successfully installed and
-working. Further configuration is required.</p>
+        ---
+        writing to stdout
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <title>Welcome to nginx!</title>
+        <style>
+        html { color-scheme: light dark; }
+        body { width: 35em; margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif; }
+        </style>
+        </head>
+        <body>
+        <h1>Welcome to nginx!</h1>
+        <p>If you see this page, the nginx web server is successfully installed and
+        working. Further configuration is required.</p>
 
-<p>For online documentation and support please refer to
-<a href="http://nginx.org/">nginx.org</a>.<br/>
-Commercial support is available at
-<a href="http://nginx.com/">nginx.com</a>.</p>
+        <p>For online documentation and support please refer to
+        <a href="http://nginx.org/">nginx.org</a>.<br/>
+        Commercial support is available at
+        <a href="http://nginx.com/">nginx.com</a>.</p>
 
-<p><em>Thank you for using nginx.</em></p>
-</body>
-</html>
--                    100% |********************************|   615  0:00:00 ETA
-written to stdout
-pod "test-ngnix" deleted
-```
+        <p><em>Thank you for using nginx.</em></p>
+        </body>
+        </html>
+        -                    100% |********************************|   615  0:00:00 ETA
+        written to stdout
+        pod "test-ngnix" deleted
+        ```
 
 ### Perform Chaos
 
@@ -307,8 +303,8 @@ Next step is to create and run a workflow in Litmus to test our application:
 - Set name and description.
 - Add a new experiment of type "generic/pod-delete".
 - Edit the experiment.
-    - Set appns = test    
-    - Add new Probe and set:  
+    - Set appns = test  .
+    - Add new Probe and set:.
         - Probe Name: Health Check
         - Probe Type: http
         - Timeout(sec): 1
@@ -340,21 +336,21 @@ Now, it is time to improve the application design.
 
 - This will be very simple, just modify the deployment to have more replicas:
 
-```bash
-kubectl patch deployment -n test nginx -p '{"spec":{"replicas":3}}'
-```
+        ```bash
+        kubectl patch deployment -n test nginx -p '{"spec":{"replicas":3}}'
+        ```
 
 - Check that now there are more than one pod running nginx.
 
-```bash
-kubectl get pod -n test
+        ```bash
+        kubectl get pod -n test
 
----
-NAME                     READY   STATUS    RESTARTS   AGE
-nginx-7848d4b86f-k2psj   1/1     Running   0          10m
-nginx-7848d4b86f-j67mg   1/1     Running   0          14s
-nginx-7848d4b86f-zs7qd   1/1     Running   0          14s
-```
+        ---
+        NAME                     READY   STATUS    RESTARTS   AGE
+        nginx-7848d4b86f-k2psj   1/1     Running   0          10m
+        nginx-7848d4b86f-j67mg   1/1     Running   0          14s
+        nginx-7848d4b86f-zs7qd   1/1     Running   0          14s
+        ```
 
 ### Check new resilience
 
