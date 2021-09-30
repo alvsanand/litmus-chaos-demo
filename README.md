@@ -16,6 +16,8 @@ More tools can be found [here](https://github.com/dastergon/awesome-chaos-engine
 
 However, the purpose of this project is to demonstrate how to run Chaos Engineering experiments using hte tool [Litmus Chaos](https://github.com/litmuschaos/litmus).
 
+![Litmus logo](https://litmuschaos.io/_next/image?url=%2Flogo.png&w=256&q=75)
+
 LitmusChaos is a Cloud-Native Chaos Engineering Framework with cross-cloud support. It is a CNCF Sandbox project with adoption across several organizations. Its mission is to help Kubernetes SREs and Developers to find weaknesses in both Non-Kubernetes as well as platforms and applications running on Kubernetes by providing a complete Chaos Engineering framework and associated Chaos Experiments.
 
 In this demo, we are going to use the version [2.0](https://github.com/litmuschaos/litmus/releases/tag/2.0.0). Additionally, you can watch [this video](https://www.youtube.com/watch?v=nOTYIVP9lZY) for more details about the 2.0 biggest improvements.
